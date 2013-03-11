@@ -46,8 +46,7 @@ namespace PathUsername
             else
             {
                 Console.WriteLine("has homedrive var"); //debug code, remove later
-
-                int p = (int)Environment.OSVersion.Platform;
+				
                 if (IsLinux) //is Linux
                 {
                     return Path;
@@ -75,8 +74,7 @@ namespace PathUsername
                 if (Path[0].ToString() == "~")
                 {
                     string homePath = "";
-
-                    int p = (int)Environment.OSVersion.Platform;
+					
                     if (IsLinux) //is Linux
                     {
                         Console.WriteLine("Running on Unix"); //debug code, remove later
@@ -101,8 +99,7 @@ namespace PathUsername
         static string CorrectSlash(string Path) //become someone is obsessed with perfection....
         {
             string slash;
-
-            int p = (int)Environment.OSVersion.Platform;
+			
             if (IsLinux) //is Linux
             {
                 slash = "/"; //forward slash
