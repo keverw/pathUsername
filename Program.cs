@@ -49,7 +49,7 @@ namespace pathUsername
 					else //is Windows
 					{
 						Console.WriteLine("NOT running on Unix"); //debug code, remove later
-						homePath = Environment.GetEnvironmentVariable("%HOMEDRIVE%%HOMEPATH%");
+                        homePath = Environment.GetEnvironmentVariable("userprofile");
 					}
 
 					path = path.Substring(1);
@@ -62,9 +62,29 @@ namespace pathUsername
 			}
 		}
 
+        static string correctSlash(string path) //become someone is obsessed with perfection....
+        {
+            string slash;
+
+            int p = (int)Environment.OSVersion.Platform;
+            if ((p == 4) || (p == 6) || (p == 128)) //is Linux
+            {
+                slash = "/"; //forward slash
+            }
+            else
+            {
+                slash = "\\"; //back slash
+            }
+            
+            path = path.Replace("/", slash);
+            path = path.Replace("\\", slash);
+
+            return path;
+        }
+
 		static string computeFullPath(string path) //short cut that calls pathTilde, and then pathUsername, useful one function to compute the full path
 		{
-			return pathUsername(pathTilde(path));
+            return correctSlash(pathUsername(pathTilde(path)));
 		}
 
 		static void Main(string[] args)
