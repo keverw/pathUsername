@@ -5,10 +5,20 @@ using System.Text;
 
 using System.Text.RegularExpressions;
 
+
 namespace pathUsername
 {
     class Program
     {
+        public static bool IsLinux
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return (p == 4) || (p == 6) || (p == 128);
+            }
+        }
+
         const string usernameVar = "%username%";
         static string pathUsername(string path) //supports using %username% in place of username
         {
@@ -38,7 +48,7 @@ namespace pathUsername
                 Console.WriteLine("has homedrive var"); //debug code, remove later
 
                 int p = (int)Environment.OSVersion.Platform;
-                if ((p == 4) || (p == 6) || (p == 128)) //is Linux
+                if (IsLinux) //is Linux
                 {
                     return path;
                 }
@@ -67,7 +77,7 @@ namespace pathUsername
                     string homePath = "";
 
                     int p = (int)Environment.OSVersion.Platform;
-                    if ((p == 4) || (p == 6) || (p == 128)) //is Linux
+                    if (IsLinux) //is Linux
                     {
                         Console.WriteLine("Running on Unix"); //debug code, remove later
                         homePath = Environment.GetEnvironmentVariable("HOME");
@@ -93,7 +103,7 @@ namespace pathUsername
             string slash;
 
             int p = (int)Environment.OSVersion.Platform;
-            if ((p == 4) || (p == 6) || (p == 128)) //is Linux
+            if (IsLinux) //is Linux
             {
                 slash = "/"; //forward slash
             }
@@ -123,8 +133,8 @@ namespace pathUsername
         {
             //string path = "C:/Users/%username%/Desktop/simBackups";
             //string path = "C:/Users/Kevin/Desktop/simBackups";
-            //string path = "~/desktop";
-            string path = "%homedrive%/simBackups";
+            string path = "~/desktop";
+            //string path = "%homedrive%/simBackups";
 
             Console.WriteLine(computeFullPath(path));
             Console.ReadLine();
