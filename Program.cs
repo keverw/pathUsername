@@ -47,7 +47,7 @@ namespace PathUsername
             {
                 Console.WriteLine("has homedrive var"); //debug code, remove later
 				
-                if (IsLinux) //is Linux
+                if (IsLinux)
                 {
                     return Path;
                 }
@@ -75,12 +75,12 @@ namespace PathUsername
                 {
                     string homePath = "";
 					
-                    if (IsLinux) //is Linux
+                    if (IsLinux)
                     {
                         Console.WriteLine("Running on Unix"); //debug code, remove later
                         homePath = Environment.GetEnvironmentVariable("HOME");
                     }
-                    else //is Windows
+                    else
                     {
                         Console.WriteLine("NOT running on Unix"); //debug code, remove later
                         homePath = Environment.GetEnvironmentVariable("userprofile");
@@ -100,7 +100,7 @@ namespace PathUsername
         {
             string slash;
 			
-            if (IsLinux) //is Linux
+            if (IsLinux)
             {
                 slash = "/"; //forward slash
             }
@@ -115,15 +115,34 @@ namespace PathUsername
             return Path;
         }
 
-        static string ComputeFullPath(string Path) //single function that calls the functions that help compute a full url Path
+        static string ForceEndSlash(string Path)
         {
-            return CorrectSlash(
-                PathHomeDrive(
-                    PathUsername(
-                        PathTilde(Path)
-                    )
+            string LastCharacter = Path.Last().ToString();
+
+            if (LastCharacter == "/" || LastCharacter == "\\")
+            {
+                return Path;
+            }
+            else
+            {
+                return Path + "/";
+            }
+        }
+
+        static string ComputeFullPath(string Path, bool forceSlash = true) //single function that calls the functions that help compute a full url Path
+        {
+            Path = PathHomeDrive(
+                PathUsername(
+                    PathTilde(Path)
                 )
             );
+
+            if (forceSlash)
+            {
+                Path = ForceEndSlash(Path);
+            }
+
+            return CorrectSlash(Path);
         }
 
         static void Main(string[] args)
