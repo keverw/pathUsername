@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 
-namespace pathUsername
+namespace PathUsername
 {
     class Program
     {
@@ -20,28 +20,28 @@ namespace pathUsername
         }
 
         const string usernameVar = "%username%";
-        static string pathUsername(string path) //supports using %username% in place of username
+        static string PathUsername(string Path) //supports using %username% in place of username
         {
-            if (path.IndexOf(usernameVar, StringComparison.CurrentCultureIgnoreCase) == -1) //does not contain username var
+            if (Path.IndexOf(usernameVar, StringComparison.CurrentCultureIgnoreCase) == -1) //does not contain username var
             {
                 Console.WriteLine("has no username var"); //debug code, remove later
-                return path;
+                return Path;
             }
             else //contains username var
             {
                 Console.WriteLine("has username var"); //debug code, remove later
                 string userName = Environment.UserName; //check system for current username
-                return Regex.Replace(path, usernameVar, userName, RegexOptions.IgnoreCase); //return path with the system username
+                return Regex.Replace(Path, usernameVar, userName, RegexOptions.IgnoreCase); //return Path with the system username
             }
         }
 
-        const string homedriveVar = "%homedrive%";
-        static string pathHomeDrive(string path) //supports for %homedrive%, gives the drive letter on Windows
+        const string HomedriveVar = "%homedrive%";
+        static string PathHomeDrive(string Path) //supports for %homedrive%, gives the drive letter on Windows
         {
-            if (path.IndexOf(homedriveVar, StringComparison.CurrentCultureIgnoreCase) == -1) //does not contain username var
+            if (Path.IndexOf(HomedriveVar, StringComparison.CurrentCultureIgnoreCase) == -1) //does not contain username var
             {
                 Console.WriteLine("has no homedrive var"); //debug code, remove later
-                return path;
+                return Path;
             }
             else
             {
@@ -50,29 +50,29 @@ namespace pathUsername
                 int p = (int)Environment.OSVersion.Platform;
                 if (IsLinux) //is Linux
                 {
-                    return path;
+                    return Path;
                 }
                 else
                 {
-                    string driveLetter = Environment.GetEnvironmentVariable("HOMEDRIVE");
+                    string DriveLetter = Environment.GetEnvironmentVariable("HOMEDRIVE");
 
-                    return Regex.Replace(path, homedriveVar, driveLetter, RegexOptions.IgnoreCase);
+                    return Regex.Replace(Path, HomedriveVar, DriveLetter, RegexOptions.IgnoreCase);
                 }
             }
         }
 
-        static string pathTilde(string path) //supports ~ for home dir at beginning of path
+        static string PathTilde(string Path) //supports ~ for home dir at beginning of Path
         {
-            if (path.IndexOf ("~", StringComparison.CurrentCultureIgnoreCase) == -1) //does not contain ~
+            if (Path.IndexOf ("~", StringComparison.CurrentCultureIgnoreCase) == -1) //does not contain ~
             {
                 Console.WriteLine("has no ~"); //debug code, remove later
-                return path;
+                return Path;
             }
             else
             {
                 Console.WriteLine("has ~"); //debug code, remove later
 
-                if (path[0].ToString() == "~")
+                if (Path[0].ToString() == "~")
                 {
                     string homePath = "";
 
@@ -88,17 +88,17 @@ namespace pathUsername
                         homePath = Environment.GetEnvironmentVariable("userprofile");
                     }
 
-                    path = path.Substring(1);
-                    return homePath + path;
+                    Path = Path.Substring(1);
+                    return homePath + Path;
                 }
                 else
                 {
-                    return path;
+                    return Path;
                 }
             }
         }
 
-        static string correctSlash(string path) //become someone is obsessed with perfection....
+        static string CorrectSlash(string Path) //become someone is obsessed with perfection....
         {
             string slash;
 
@@ -112,18 +112,18 @@ namespace pathUsername
                 slash = "\\"; //back slash
             }
             
-            path = path.Replace("/", slash);
-            path = path.Replace("\\", slash);
+            Path = Path.Replace("/", slash);
+            Path = Path.Replace("\\", slash);
 
-            return path;
+            return Path;
         }
 
-        static string computeFullPath(string path) //single function that calls the functions that help compute a full url path
+        static string ComputeFullPath(string Path) //single function that calls the functions that help compute a full url Path
         {
-            return correctSlash(
-                pathHomeDrive(
-                    pathUsername(
-                        pathTilde(path)
+            return CorrectSlash(
+                PathHomeDrive(
+                    PathUsername(
+                        PathTilde(Path)
                     )
                 )
             );
@@ -131,12 +131,12 @@ namespace pathUsername
 
         static void Main(string[] args)
         {
-            //string path = "C:/Users/%username%/Desktop/simBackups";
-            //string path = "C:/Users/Kevin/Desktop/simBackups";
-            string path = "~/desktop";
-            //string path = "%homedrive%/simBackups";
+            //string Path = "C:/Users/%username%/Desktop/simBackups";
+            //string Path = "C:/Users/Kevin/Desktop/simBackups";
+            string Path = "~/desktop";
+            //string Path = "%homedrive%/simBackups";
 
-            Console.WriteLine(computeFullPath(path));
+            Console.WriteLine(ComputeFullPath(Path));
             Console.ReadLine();
         }
     }
